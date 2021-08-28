@@ -23,7 +23,7 @@ char *strchr_(char *line, char symbol, char end_input = '\n');
 /**
  * ќпределение длины строки
  *
- * @param[in]  line            указатель на строку
+ * @param[in] line             указатель на строку
  * @param[in] end_input = '\n' опциональный параметр функции, конец считывани€
  *
  * @param[out] string_length   количество символов в строке до первого вхождени€ символа конца строки
@@ -33,7 +33,7 @@ int strlen_(char *line, char end_input = '\n');
 /**
  *  опирование строк
  *
- * @param[in]  source          указатель на строку источник копируемых данных
+ * @param[in] source           указатель на строку источник копируемых данных
  * @param[in] end_input = '\n' опциональный параметр функции, конец считывани€
  *
  * @param[out] dest            указатель на строку, в которую будут скопированы данные
@@ -90,6 +90,9 @@ char *strdup_(char *dest);
  *
  * @param[out] dest            указатель на указатель на строки,
  *                             в которую будет помещена считанна€ строка
+ *
+ * @return -1 в случае ошибки
+ * @return NULL если передаваема€ строчка пуста€
  */
 int getline_(FILE *input, char **dest, char end_input = '\n');
 
@@ -105,6 +108,16 @@ int getline_(FILE *input, char **dest, char end_input = '\n');
  *                             в которую будет помещена считанна€ строка
  */
 int fgets_(FILE *input, char *dest, char end_input, int string_length);
+
+/**
+ * ѕроверка пуста€ ли строка
+ *
+ * @param[in] line             указатель на строку
+ * @param[in] end_input = '\n' опциональный параметр функции, конец считывани€
+ *
+ * @return 1 если строка пуста€
+ * @return 0 если в строке есть символы
+ */
 
 int line_is_empty(char *line, char end_input = '\n');
 

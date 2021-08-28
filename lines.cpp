@@ -34,6 +34,9 @@ char *strchr_(char *line, char symbol, char end_input)
         }
     }
 
+    if (symbol == end_input)
+        return &line[strlen_(line, end_input) - 1];
+
     return position == -1 ? NULL : &line[position];
 }
 

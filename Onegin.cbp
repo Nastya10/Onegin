@@ -35,6 +35,8 @@
 		<Unit filename="lines.cpp" />
 		<Unit filename="lines.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="overall.cpp" />
+		<Unit filename="overall.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
