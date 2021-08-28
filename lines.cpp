@@ -48,7 +48,7 @@ int strlen_(char *line)
     return (string_length);
 }
 
-void strcpy_(char *dest, char *source)     //ok
+void strcpy_(char *dest, char *source)
 {
     assert(dest != NULL);
     assert(source != NULL);
@@ -57,7 +57,7 @@ void strcpy_(char *dest, char *source)     //ok
         dest[symbol_index] = source[symbol_index];
 }
 
-void strncpy_(char *dest, char *source, int string_length)     //ok
+void strncpy_(char *dest, char *source, int string_length) 
 {
     assert(dest != NULL);
     assert(source != NULL);
@@ -68,7 +68,7 @@ void strncpy_(char *dest, char *source, int string_length)     //ok
     }
 }
 
-void strcat_(char *dest, char *append)     //ok
+void strcat_(char *dest, char *append) 
 {
     assert(dest != NULL);
     assert(append != NULL);
@@ -82,7 +82,7 @@ void strcat_(char *dest, char *append)     //ok
     }
 }
 
-void strncat_(char *dest, char *append, int string_length)      //ok
+void strncat_(char *dest, char *append, int string_length) 
 {
     assert(dest != NULL);
     assert(append != NULL);
@@ -128,11 +128,11 @@ int getline_(FILE *input, char **dest, char end_input)
     if (*dest == NULL)
         return NULL;
 
-    if (symbol == EOF)
-    {                         //проверка конец файла или ошибка чтения
+    if (symbol == EOF)          //РїСЂРѕРІРµСЂРєР° РєРѕРЅРµС† С„Р°Р№Р»Р° РёР»Рё РѕС€РёР±РєР° С‡С‚РµРЅРёСЏ
+    {                         
         if (feof(input))
         {
-            printf("Ошибка чтения файла\n");
+            printf("File reading error\n");
             return NULL;
         }
     }
@@ -160,11 +160,11 @@ int fgets_(FILE *input, char **dest, char end_input, int string_length)
     if (*dest == NULL)
         return NULL;
 
-    if (symbol == EOF)
-    {                         //проверка конец файла или ошибка чтения
+    if (symbol == EOF)          //РїСЂРѕРІРµСЂРєР° РєРѕРЅРµС† С„Р°Р№Р»Р° РёР»Рё РѕС€РёР±РєР° С‡С‚РµРЅРёСЏ
+    {                      
         if (feof(input))
         {
-            printf("Ошибка чтения файла\n");
+            printf("File reading error\n");
             return NULL;
         }
     }
