@@ -4,12 +4,12 @@
 
 #include "lines.h"
 
-int puts_(char *line)
+int puts_(char *line, char end_input)
 {
     if (line == NULL)
         return EOF;
 
-    for (int symbol_index = 0; line[symbol_index] != '\0'; symbol_index++)
+    for (int symbol_index = 0; line[symbol_index] != end_input; symbol_index++)
     {
         putchar(line[symbol_index]);
     }
@@ -19,13 +19,13 @@ int puts_(char *line)
     return 1;
 }
 
-char *strchr_(char *line, char symbol)
+char *strchr_(char *line, char symbol, char end_input)
 {
     assert(line != NULL);
 
     int position = -1;
 
-    for (int symbol_index = 0; line[symbol_index] != '\0'; symbol_index++)
+    for (int symbol_index = 0; line[symbol_index] != end_input; symbol_index++)
     {
         if (line[symbol_index] == symbol)
         {
@@ -37,59 +37,61 @@ char *strchr_(char *line, char symbol)
     return position == -1 ? NULL : &line[position];
 }
 
-int strlen_(char *line)
+int strlen_(char *line, char end_input)
 {
     assert(line != NULL);
 
     int string_length = 0;
 
-    for (string_length; line[string_length] != '\0'; string_length++) {};
+    for (string_length; line[string_length] != end_input; string_length++) {};
 
     return (string_length);
 }
 
-void strcpy_(char *dest, char *source)
+void strcpy_(char *dest, char *source, char end_input)
 {
     assert(dest != NULL);
     assert(source != NULL);
 
-    for (int symbol_index = 0; source[symbol_index] != '\0'; symbol_index++)
+    for (int symbol_index = 0; source[symbol_index] != end_input; symbol_index++)
         dest[symbol_index] = source[symbol_index];
 }
 
-void strncpy_(char *dest, char *source, int string_length)
+void strncpy_(char *dest, char *source, int string_length, char end_input)
 {
     assert(dest != NULL);
     assert(source != NULL);
 
-    for (int symbol_index = 0; source[symbol_index] != '\0' && symbol_index != string_length; symbol_index++)
+    for (int symbol_index = 0; source[symbol_index] != end_input &&
+         symbol_index != string_length; symbol_index++)
     {
         dest[symbol_index] = source[symbol_index];
     }
 }
 
-void strcat_(char *dest, char *append)
+void strcat_(char *dest, char *append, char end_input)
 {
     assert(dest != NULL);
     assert(append != NULL);
 
     int dest_len = strlen_(dest);
 
-    for (int symbol_index = 0; append[symbol_index] != '\0'; symbol_index++)
+    for (int symbol_index = 0; append[symbol_index] != end_input; symbol_index++)
     {
         dest[dest_len] = append[symbol_index];
         dest_len++;
     }
 }
 
-void strncat_(char *dest, char *append, int string_length)
+void strncat_(char *dest, char *append, int string_length, char end_input)
 {
     assert(dest != NULL);
     assert(append != NULL);
 
     int dest_len = strlen_(dest);
 
-    for (int symbol_index = 0; append[symbol_index] != '\0' && symbol_index != string_length; symbol_index++)
+    for (int symbol_index = 0; append[symbol_index] != end_input &&
+         symbol_index != string_length; symbol_index++)
     {
         dest[dest_len] = append[symbol_index];
         dest_len++;
@@ -118,7 +120,13 @@ int getline_(FILE *input, char **dest, char end_input)
     {
         int len_dest = *dest != NULL ? strlen_(*dest) : 0;
 
-        *dest = (char*) realloc(*dest, (len_dest + 2) * sizeof(char));
+        char* temp = (char*) realloc(*dest, (len_dest + 2) * sizeof(char));
+
+        if (temp == NULL) {
+            return -1;
+        }
+
+        *dest = temp;
         (*dest)[len_dest] = symbol;
         (*dest)[len_dest + 1] = 0;
 
@@ -133,7 +141,7 @@ int getline_(FILE *input, char **dest, char end_input)
         if (feof(input))
         {
             printf("File reading error\n");
-            return NULL;
+            return -1;
         }
     }
 
@@ -172,5 +180,20 @@ int fgets_(FILE *input, char *dest, char end_input, int string_length)
     }
 
 
+    return 1;
+}
+
+
+int line_is_empty(char *line, char end_input)
+{
+    for (int symbol_index = 0; line[symbol_index] != end_input; symbol_index++)
+    {
+        if (line[symbol_index] != NULL && line[symbol_index] != ' ' && line[symbol_index] != '\t')
+        {
+            printf("%d\t%d\n", (int)(line[symbol_index]), symbol_index);
+
+            return 0;
+        }
+    }
     return 1;
 }

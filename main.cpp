@@ -6,10 +6,12 @@
 
 int main()
 {
+    char line[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, '\n'};
+    printf("%d\n", line_is_empty(line));
 
-    char line[10] = {};
-    fgets_(stdin, line, ';', 5);
-    printf("FINAL OUTPUT: %s\n", line);
+    /*char line[10] = {};
+    getline_(stdin, &line, ';');
+    printf("FINAL OUTPUT: %s\n", line);*/
 
     return 0;
 }
