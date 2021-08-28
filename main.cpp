@@ -7,10 +7,9 @@
 int main()
 {
 
-    char *line = NULL;
-    fgets_(stdin, &line, ';', 5);
+    char *line = "hghjvjh";
+    fgets_(stdin, line, ';', 5);
     printf("%s\n", line);
-    free(line);
 
     return 0;
 }

@@ -95,6 +95,6 @@ int getline_(FILE *input, char **dest, char end_input);
  * @param[out] dest         указатель на указатель на строки,
  *                          в которую будет помещена считанная строка
  */
-int fgets_(FILE *input, char **dest, char end_input, int string_length);
+int fgets_(FILE *input, char *dest, char end_input, int string_length);
 
 #endif // LINES_H_INCLUDED

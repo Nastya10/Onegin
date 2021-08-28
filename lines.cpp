@@ -57,7 +57,7 @@ void strcpy_(char *dest, char *source)
         dest[symbol_index] = source[symbol_index];
 }
 
-void strncpy_(char *dest, char *source, int string_length) 
+void strncpy_(char *dest, char *source, int string_length)
 {
     assert(dest != NULL);
     assert(source != NULL);
@@ -68,7 +68,7 @@ void strncpy_(char *dest, char *source, int string_length)
     }
 }
 
-void strcat_(char *dest, char *append) 
+void strcat_(char *dest, char *append)
 {
     assert(dest != NULL);
     assert(append != NULL);
@@ -82,7 +82,7 @@ void strcat_(char *dest, char *append)
     }
 }
 
-void strncat_(char *dest, char *append, int string_length) 
+void strncat_(char *dest, char *append, int string_length)
 {
     assert(dest != NULL);
     assert(append != NULL);
@@ -128,8 +128,8 @@ int getline_(FILE *input, char **dest, char end_input)
     if (*dest == NULL)
         return NULL;
 
-    if (symbol == EOF)          //РїСЂРѕРІРµСЂРєР° РєРѕРЅРµС† С„Р°Р№Р»Р° РёР»Рё РѕС€РёР±РєР° С‡С‚РµРЅРёСЏ
-    {                         
+    if (symbol == EOF)          //проверка конец файла или ошибка чтения
+    {
         if (feof(input))
         {
             printf("File reading error\n");
@@ -139,35 +139,37 @@ int getline_(FILE *input, char **dest, char end_input)
 
 }
 
-int fgets_(FILE *input, char **dest, char end_input, int string_length)
+int fgets_(FILE *input, char *dest, char end_input, int string_length)
 {
-    int symbol = fgetc(input);
+    if (dest == NULL)
+        return NULL;
 
-    while(symbol != EOF && symbol != end_input)
+    char symbol = getchar();
+
+    for (int symbol_index = 0; symbol != EOF && symbol != end_input; symbol_index++)
     {
-        int len_dest = *dest != NULL ? strlen_(*dest) : 0;
-
-        if (len_dest == string_length)
+        if (symbol_index == string_length)
             break;
 
-        *dest = (char*) realloc(*dest, (len_dest + 2) * sizeof(char));
-        (*dest)[len_dest] = symbol;
-        (*dest)[len_dest + 1] = 0;
+        dest[symbol_index] = symbol;
+        dest[symbol_index + 1] = 0;
 
         symbol = getchar();
     }
 
-    if (*dest == NULL)
+    if (dest == NULL)
         return NULL;
 
-    if (symbol == EOF)          //РїСЂРѕРІРµСЂРєР° РєРѕРЅРµС† С„Р°Р№Р»Р° РёР»Рё РѕС€РёР±РєР° С‡С‚РµРЅРёСЏ
-    {                      
+    if (symbol == EOF)          //проверка конец файла или ошибка чтения
+    {
         if (feof(input))
         {
             printf("File reading error\n");
             return NULL;
         }
     }
+
+    printf("%s\n", dest);
 
     return 1;
 }
