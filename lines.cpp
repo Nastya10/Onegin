@@ -144,21 +144,23 @@ int fgets_(FILE *input, char *dest, char end_input, int string_length)
     if (dest == NULL)
         return NULL;
 
-    char symbol = getchar();
+    char symbol = fgetc(input);
 
-    for (int symbol_index = 0; symbol != EOF && symbol != end_input; symbol_index++)
+    int symbol_index = 0;
+
+    for (symbol_index; symbol != EOF && symbol != end_input; symbol_index++)
     {
         if (symbol_index == string_length)
+        {
             break;
+        }
 
         dest[symbol_index] = symbol;
-        dest[symbol_index + 1] = 0;
 
-        symbol = getchar();
+        symbol = fgetc(input);
     }
 
-    if (dest == NULL)
-        return NULL;
+    dest[symbol_index + 1] = 0;
 
     if (symbol == EOF)          //проверка конец файла или ошибка чтения
     {
@@ -169,7 +171,6 @@ int fgets_(FILE *input, char *dest, char end_input, int string_length)
         }
     }
 
-    printf("%s\n", dest);
 
     return 1;
 }

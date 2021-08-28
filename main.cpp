@@ -7,9 +7,9 @@
 int main()
 {
 
-    char *line = "hghjvjh";
+    char line[10] = {};
     fgets_(stdin, line, ';', 5);
-    printf("%s\n", line);
+    printf("FINAL OUTPUT: %s\n", line);
 
     return 0;
 }
