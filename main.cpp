@@ -7,8 +7,8 @@
 
 int main()
 {
-    FILE *input_file1 = fopen("1", "r");
-    FILE *input_file2 = fopen("2", "w");
+    FILE *input_file1 = fopen("input", "r");
+    FILE *input_file2 = fopen("conclusion", "w");
 
 
     int file_len = 0;
