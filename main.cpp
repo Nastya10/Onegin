@@ -1,33 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 
 #include "lines.h"
 #include "overall.h"
 
+
 int main()
 {
-    int length = 0;
+    FILE *input_file1 = fopen("1", "r");
+    FILE *input_file2 = fopen("2", "w");
 
-    FILE *fp = fopen("1", "r");
-    FILE *record = fopen("2", "w");
 
-    char **array_lines = read_lines(fp, &length);
+    int file_len = 0;
+    int len_array = 0;
 
-    bubble_sort(array_lines, length);
+    char *buffer = copy_file(input_file1, &file_len);
+    struct array_element *array_lines = read_lines(buffer, file_len, &len_array);
 
-    print_array(array_lines, length);
+    fprint_array(array_lines, len_array, input_file2);
+    fprintf(input_file2, "\n");
 
-    fprint_array(array_lines, length, record);
+    quick_sort(array_lines, 0, len_array - 1, BEG_OF_LINE);
+    fprint_array(array_lines, len_array, input_file2);
+    fprintf(input_file2, "\n");
 
-    fclose(fp);
-    fclose(record);
+    quick_sort(array_lines, 0, len_array - 1, END_OF_LINE);
+    fprint_array(array_lines, len_array, input_file2);
+    fprintf(input_file2, "\n");
 
-    //printf("%d\n", line_is_empty("", '\0'));
+    free(array_lines);
 
-    //char *line = line_backwards("abcdef", 6);
-
-    //printf("%s\n", line);
+    fclose(input_file1);
+    fclose(input_file2);
 
     return 0;
 }

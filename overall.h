@@ -1,19 +1,18 @@
 #ifndef OVERALL_H_INCLUDED
 #define OVERALL_H_INCLUDED
 
-const int MAX_LENGTH = 1000;
+int file_size(FILE *input_file);
 
-struct array_element {
-    char *line;
-    int line_len;
-};
+char *copy_file(FILE *input_file, int *file_len);
 
-char **read_lines(FILE *input, int* length);
+void print_array(struct array_element *array_lines, int len_array);
 
-void print_array(char **array_lines, int len_array);
+void fprint_array(struct array_element *array_lines, int len_array, FILE *conclusion);
 
-void fprint_array(char **array_lines, int len_array, FILE *conclusion);
+int max_(int number1, int number2);
 
-void bubble_sort(char **array_lines, int len_array);
+int min_(int number1, int number2);
+
+void quick_sort(struct array_element *array_lines, int low, int high, enum direction start);
 
 #endif // OVERALL_H_INCLUDED

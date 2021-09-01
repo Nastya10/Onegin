@@ -1,85 +1,139 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <cassert>
+#include <cctype>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-#include "overall.h"
 #include "lines.h"
+#include "overall.h"
 
-char **read_lines(FILE *input, int* length)
+
+int file_size(FILE *input_file)
 {
-    assert(length != NULL);
+    assert(input_file != NULL);
 
-    char **array_lines = (char**) calloc(1, sizeof(char*));
-    char* line = (char*) calloc(1, sizeof(char));
+    fseek(input_file, 0, SEEK_END);
+    int file_size = ftell(input_file);
+    fseek(input_file, 0, SEEK_SET);
 
-    int getline_result = getline_(input, &line, MAX_LENGTH, '\n');
+    return file_size;
+}
 
-    int symbol_index = 0;
+char *copy_file(FILE *input_file, int *file_len)
+{
+    assert(input_file != NULL);
+    assert(file_len != NULL);
 
-    for (symbol_index; getline_result != -1 && getline_result != END_FILE; symbol_index++)
+    *file_len = file_size(input_file);
+
+    char *buffer = (char*)calloc(*file_len + 2, sizeof(char));
+    buffer[*file_len] = '\n';
+    buffer[*file_len + 1] = EOF;
+
+    fread(buffer, sizeof(char), *file_len, input_file);
+
+    return buffer;
+}
+
+void print_array(struct array_element *array_lines, int len_array)
+{
+    assert(array_lines != NULL);
+
+    for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
+        printf("%s\n", array_lines[symbol_index].line);
+}
+
+void fprint_array(struct array_element *array_lines, int len_array, FILE *conclusion)
+{
+    assert(array_lines != NULL);
+    assert(conclusion != NULL);
+
+    for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
+        fprintf(conclusion, "%s\n", array_lines[symbol_index].line);
+}
+
+int max_(int number1, int number2)
+{
+    if (number1 > number2)
     {
-        array_lines = (char**) realloc(array_lines, (symbol_index + 1) * sizeof(char*));
-
-        if (array_lines == NULL) {
-            printf ("ERROR: Realloc faild\n");
-            return 0;
-        }
-
-        if (line_is_empty(line, '\n') == 0)
-        {
-            array_lines[symbol_index] = line;
-        }
-        else
-        {
-            symbol_index--;
-        }
-
-        line = (char*) calloc(1, sizeof(char));
-
-        getline_result = getline_(input, &line, MAX_LENGTH, '\n');
+        return number1;
     }
-
-    *length = symbol_index;
-
-    return array_lines;
-
-}
-
-void print_array(char **array_lines, int len_array)
-{
-    for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
-        printf("%s\n", array_lines[symbol_index]);
-}
-
-void fprint_array(char **array_lines, int len_array, FILE *conclusion)
-{
-    for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
-        fprintf(conclusion, "%s\n", array_lines[symbol_index]);
-}
-
-void bubble_sort(char **array_lines, int len_array)
-{
-    bool no_swap = 1;
-
-    for (int symbol_index1 = len_array - 1; symbol_index1 >= 0; symbol_index1--)
+    else if (number2 > number1)
     {
-        no_swap = 1;
+        return number2;
+    }
+    else
+    {
+        return number1;
+    }
+}
 
-        for (int symbol_index2 = 0; symbol_index2 < symbol_index1; symbol_index2++)
+int min_(int number1, int number2)
+{
+    if (number1 < number2)
+    {
+        return number1;
+    }
+    else if (number2 < number1)
+    {
+        return number2;
+    }
+    else
+    {
+        return number1;
+    }
+}
+
+void quick_sort(struct array_element *array_lines, int low, int high, enum direction start)
+{
+    assert(array_lines != NULL);
+
+    int symbol_index1 = low;
+    int symbol_index2 = high;
+
+    char *pivot = array_lines[(low + (high-low)/2)].line;
+
+    while (symbol_index1 <= symbol_index2)
+    {
+        while (strcmp_(array_lines[symbol_index1].line, pivot, start) == -1)
         {
-            if(strcmp(array_lines[symbol_index2], array_lines[symbol_index2 + 1]) > 0)
-            {
-                char *tmp = array_lines[symbol_index2];
-                array_lines[symbol_index2] = array_lines[symbol_index2 + 1];
-                array_lines[symbol_index2 + 1] = tmp;
+            symbol_index1++;
+        }
+        while (strcmp_(array_lines[symbol_index2].line, pivot, start) == 1)
+        {
+            symbol_index2--;
+        }
 
-                no_swap = 0;
+        if (symbol_index1 <= symbol_index2)
+        {
+            if (strcmp_(array_lines[symbol_index1].line, array_lines[symbol_index2].line, start) == 1)
+            {
+                char *temp = array_lines[symbol_index1].line;
+                int temp_len = array_lines[symbol_index1].line_len;
+
+                array_lines[symbol_index1].line = array_lines[symbol_index2].line;
+                array_lines[symbol_index1].line_len = array_lines[symbol_index2].line_len;
+
+                array_lines[symbol_index2].line = temp;
+                array_lines[symbol_index2].line_len = temp_len;
+            }
+
+            symbol_index1++;
+
+            if (symbol_index2 > 0)
+            {
+                symbol_index2--;
             }
         }
-        if(no_swap == 1)
-        {
-            break;
-        }
+    }
+
+    if (symbol_index1 < high)
+    {
+        quick_sort(array_lines, symbol_index1, high, start);
+    }
+
+    if (symbol_index2 > low)
+    {
+        quick_sort(array_lines, low, symbol_index2, start);
     }
 }

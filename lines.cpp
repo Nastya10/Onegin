@@ -1,51 +1,45 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <cassert>
-#include <ctype.h>
+#include <cctype>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "lines.h"
+#include "overall.h"
 
-int puts_(char *line, char end_input)
+struct array_element *read_lines(char *buffer, int file_len, int* length)
 {
-    if (line == NULL)
-        return EOF;
+    assert(buffer != NULL);
+    assert(length != NULL);
 
-    for (int symbol_index = 0; line[symbol_index] != end_input; symbol_index++)
+    int num_lines = n_lines(buffer, file_len);
+
+    struct array_element *array_lines = (struct array_element*) calloc(num_lines, sizeof(struct array_element));
+
+    int array_index = 0;
+
+    for (int symbol_index = 0; array_index < num_lines; symbol_index++)
     {
-        int symbol = putchar(line[symbol_index]);
-        if(symbol == EOF)
+        if (line_is_empty(&buffer[symbol_index], 0) == 0)
         {
-            printf("Output error");
-            return EOF;
+            array_lines[array_index].line = &buffer[symbol_index];
+            array_lines[array_index].line_len = strlen_(&buffer[symbol_index], 0);
+
+            symbol_index += array_lines[array_index].line_len;
+
+            array_index++;
+        }
+        else
+        {
+            symbol_index += strlen_(&buffer[symbol_index], 0);
+
+            num_lines--;
         }
     }
 
-    putchar('\n');
+    *length = num_lines;
 
-    return 1;
-}
-
-char *strchr_(char *line, char symbol, char end_input)
-{
-    assert(line != NULL);
-
-    int position = -1;
-
-    int symbol_index = 0;
-
-    for (symbol_index; line[symbol_index] != end_input; symbol_index++)
-    {
-        if (line[symbol_index] == symbol)
-        {
-            position = symbol_index;
-            break;
-        }
-    }
-
-    if (symbol == end_input)
-        return &line[symbol_index];
-
-    return position == -1 ? NULL : &line[position];
+    return array_lines;
 }
 
 int strlen_(char *line, char end_input)
@@ -60,169 +54,10 @@ int strlen_(char *line, char end_input)
     return string_length;
 }
 
-char *strcpy_(char *dest, char *source, char end_input)
-{
-    assert(dest != NULL);
-    assert(source != NULL);
-    assert(dest != source);
-
-    int symbol_index = 0;
-
-    for (symbol_index; source[symbol_index] != end_input; symbol_index++)
-        dest[symbol_index] = source[symbol_index];
-
-    dest[symbol_index + 1] = end_input;
-
-    return dest;
-}
-
-char *strncpy_(char *dest, char *source, int string_length, char end_input)
-{
-    assert(dest != NULL);
-    assert(source != NULL);
-    assert(dest != source);
-
-    int symbol_index = 0;
-
-    for (symbol_index; source[symbol_index] != end_input &&
-         symbol_index < string_length; symbol_index++)
-    {
-        dest[symbol_index] = source[symbol_index];
-    }
-
-    dest[symbol_index + 1] = end_input;
-
-    return dest;
-}
-
-char *strcat_(char *dest, char *append, char end_input)
-{
-    assert(dest != NULL);
-    assert(append != NULL);
-
-    int dest_len = strlen_(dest);
-
-    for (int symbol_index = 0; append[symbol_index] != end_input; symbol_index++)
-    {
-        dest[dest_len] = append[symbol_index];
-        dest_len++;
-    }
-    return dest;
-}
-
-char *strncat_(char *dest, char *append, int string_length, char end_input)
-{
-    assert(dest != NULL);
-    assert(append != NULL);
-
-    int dest_len = strlen_(dest);
-
-    for (int symbol_index = 0; append[symbol_index] != end_input &&
-         symbol_index < string_length; symbol_index++)
-    {
-        dest[dest_len] = append[symbol_index];
-        dest_len++;
-    }
-    return dest;
-}
-
-char *strdup_(char *dest)
-{
-    assert(dest != NULL);
-
-    int dest_len = strlen_(dest);
-
-    char *line_copy = NULL;
-
-    line_copy = (char*) calloc(dest_len + 1, sizeof(char));
-
-    if (line_copy == NULL)
-    {
-        printf("ERROR calloc");
-        return NULL;
-    }
-
-    strncpy_(line_copy, dest, dest_len);
-
-    return line_copy;
-}
-
-int getline_(FILE *input, char **dest, int string_length, char end_input)
-{
-    int symbol = fgetc(input);
-
-    while(symbol != EOF && symbol != end_input)
-    {
-        int len_dest = *dest != NULL ? strlen_(*dest) : 0;
-
-        if (len_dest >= string_length)
-            break;
-
-        char* temp = (char *)realloc(*dest, (len_dest + 2) * sizeof(char));
-
-        if (temp == NULL) {
-            printf ("ERROR: Realloc faild\n");
-            return -1;
-        }
-
-        *dest = temp;
-
-        (*dest)[len_dest] = symbol;
-        (*dest)[len_dest + 1] = 0;
-
-        symbol = fgetc(input);
-    }
-
-    if (symbol == EOF)          //проверка конец файла или ошибка чтения
-    {
-        if (feof(input) == 0)
-        {
-            printf("File reading error\n");
-            return -1;
-        }
-        return END_FILE;               //считанная строка состоит только из символа конца файла
-    }
-
-    return 1;
-
-}
-
-int fgets_(FILE *input, char *dest, char end_input, int string_length)
-{
-    if (dest == NULL)
-        return NULL;
-
-    char symbol = fgetc(input);
-
-    int symbol_index = 0;
-
-    for (symbol_index; symbol != EOF && symbol != end_input &&
-         symbol_index < (string_length - 1); symbol_index++)
-    {
-        dest[symbol_index] = symbol;
-
-        symbol = fgetc(input);
-    }
-
-    dest[symbol_index + 1] = 0;
-
-    if (symbol == EOF)          //проверка конец файла или ошибка чтения
-    {
-        if (feof(input))
-        {
-            printf("File reading error\n");
-            return NULL;
-        }
-        return 0;               //считанная строка состоит только из символа конца файла
-    }
-
-
-    return 1;
-}
-
-
 int line_is_empty(char *line, char end_input)
 {
+    assert(line != NULL);
+
     for (int symbol_index = 0; line[symbol_index] != end_input
          && line[symbol_index] != 0; symbol_index++)
     {
@@ -232,4 +67,89 @@ int line_is_empty(char *line, char end_input)
         }
     }
     return 1;
+}
+
+
+int strcmp_(char *str1, char *str2, enum direction start)
+{
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
+    int len_str1 = strlen(str1);
+    int len_str2 = strlen(str2);
+
+    int min_len = min_(len_str1, len_str2);
+
+    for(int symbol_index = 0; symbol_index < min_len; symbol_index++)
+    {
+        if (start == BEG_OF_LINE)
+        {
+            char symbol1 = tolower(str1[symbol_index]);
+            char symbol2 = tolower(str2[symbol_index]);
+
+            if (symbol1 != symbol2)
+            {
+                if ((int)(symbol1) > (int)(symbol2))
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+        else
+        {
+            char symbol1 = tolower(str1[len_str1 - 1 - symbol_index]);
+            char symbol2 = tolower(str2[len_str2 - 1 - symbol_index]);
+
+            if (symbol1 != symbol2)
+            {
+                if ((int)(symbol1) > (int)(symbol2))
+                {
+                    return 1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+    }
+
+    if (len_str1 == len_str2)
+    {
+        return 0;
+    }
+    else
+    {
+        if (len_str1 > len_str2)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+}
+
+
+int n_lines(char *buffer, int file_len)
+{
+    assert(buffer != NULL);
+
+    int num_lines = 0;
+
+    for (int symbol_index = 0; symbol_index <= file_len; symbol_index++)
+    {
+        if (buffer[symbol_index] == '\n')
+        {
+            buffer[symbol_index] = 0;
+            num_lines++;
+        }
+    }
+
+    return num_lines;
 }
