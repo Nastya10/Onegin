@@ -1,5 +1,5 @@
-#include <cassert>
-#include <cctype>
+#include <assert.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,9 +26,8 @@ char *copy_file(FILE *input_file, int *file_len)
 
     *file_len = file_size(input_file);
 
-    char *buffer = (char*)calloc(*file_len + 2, sizeof(char));
+    char *buffer = (char*) calloc(*file_len + 2, sizeof(char));
     buffer[*file_len] = '\n';
-    buffer[*file_len + 1] = EOF;
 
     fread(buffer, sizeof(char), *file_len, input_file);
 
@@ -39,8 +38,7 @@ void print_array(struct array_element *array_lines, int len_array)
 {
     assert(array_lines != NULL);
 
-    for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
-        printf("%s\n", array_lines[symbol_index].line);
+    fprint_array(array_lines, len_array, stdout);
 }
 
 void fprint_array(struct array_element *array_lines, int len_array, FILE *conclusion)
@@ -49,7 +47,7 @@ void fprint_array(struct array_element *array_lines, int len_array, FILE *conclu
     assert(conclusion != NULL);
 
     for(int symbol_index = 0; symbol_index < len_array; symbol_index++)
-        fprintf(conclusion, "%s\n", array_lines[symbol_index].line);
+        fputs_(array_lines[symbol_index].str, END_OF_STR, conclusion);
 }
 
 int max_(int number1, int number2)
@@ -91,38 +89,50 @@ void quick_sort(struct array_element *array_lines, int low, int high, enum direc
     int symbol_index1 = low;
     int symbol_index2 = high;
 
-    char *pivot = array_lines[(low + (high-low)/2)].line;
+    int (*strcmp_)(char *, char *) = NULL;
+
+    if (start == BEG_OF_LINE)
+    {
+        strcmp_ = strcmp_begin;
+    }
+    else
+    {
+        strcmp_ = strcmp_end;
+    }
+
+    char *pivot = array_lines[(low + (high-low)/2)].str;
 
     while (symbol_index1 <= symbol_index2)
     {
-        while (strcmp_(array_lines[symbol_index1].line, pivot, start) == -1)
+        while (strcmp_(array_lines[symbol_index1].str, pivot) == -1)
         {
-            symbol_index1++;
+            ++symbol_index1;
         }
-        while (strcmp_(array_lines[symbol_index2].line, pivot, start) == 1)
+
+        while (strcmp_(array_lines[symbol_index2].str, pivot) == 1)
         {
-            symbol_index2--;
+            --symbol_index2;
         }
 
         if (symbol_index1 <= symbol_index2)
         {
-            if (strcmp_(array_lines[symbol_index1].line, array_lines[symbol_index2].line, start) == 1)
+            if (strcmp_(array_lines[symbol_index1].str, array_lines[symbol_index2].str) == 1)
             {
-                char *temp = array_lines[symbol_index1].line;
-                int temp_len = array_lines[symbol_index1].line_len;
+                char *temp = array_lines[symbol_index1].str; //отдельная функция swap.
+                int temp_len = array_lines[symbol_index1].len;
 
-                array_lines[symbol_index1].line = array_lines[symbol_index2].line;
-                array_lines[symbol_index1].line_len = array_lines[symbol_index2].line_len;
+                array_lines[symbol_index1].str = array_lines[symbol_index2].str;
+                array_lines[symbol_index1].len = array_lines[symbol_index2].len;
 
-                array_lines[symbol_index2].line = temp;
-                array_lines[symbol_index2].line_len = temp_len;
+                array_lines[symbol_index2].str = temp;
+                array_lines[symbol_index2].len = temp_len;
             }
 
             symbol_index1++;
 
             if (symbol_index2 > 0)
             {
-                symbol_index2--;
+                --symbol_index2;
             }
         }
     }
