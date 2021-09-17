@@ -45,22 +45,22 @@ enum direction {
 
 struct array_element *read_lines(char *buffer, int buffer_len, int* length);
 
-int strlen_(const char *str, char end_input);
+int strlen_(const char *str, const char end_input);
 
-int line_is_empty(char *str, char end_input);
+int line_is_empty(const char *str, const char end_input);
 
 int strcmp_begin(char *str1, char *str2);
 
 int strcmp_end(char *str1, char *str2);
 
-int n_lines(char *buffer, int buffer_len);
+int n_lines(const char *buffer, const int buffer_len);
 
-int len_alpha_str(const char *str, int len_str);
+int len_alpha_str(const char *str, const int len_str);
 
 int is_comparable(const char symbol);
 
-char tolower_(char symbol);
+char tolower_(const char symbol);
 
-int fputs_(char *line, char end_input, FILE *conclusion);
+int fputs_(const char *line, const char end_input, FILE *conclusion);
 
 #endif // LINES_H_INCLUDED

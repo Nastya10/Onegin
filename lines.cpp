@@ -7,7 +7,7 @@
 #include "lines.h"
 #include "overall.h"
 
-struct array_element *read_lines(char *buffer, int buffer_len, int* length)
+struct array_element *read_lines(char *buffer, const int buffer_len, int* length)
 {
     assert(buffer != NULL);
     assert(length != NULL);
@@ -15,7 +15,7 @@ struct array_element *read_lines(char *buffer, int buffer_len, int* length)
     int num_lines = n_lines(buffer, buffer_len);
 
     struct array_element *array_lines = (struct array_element*) calloc(num_lines, sizeof(struct array_element));
-    //assert (array_element);
+    assert(array_lines != 0);
 
     int array_index = 0;
 
@@ -43,7 +43,7 @@ struct array_element *read_lines(char *buffer, int buffer_len, int* length)
     return array_lines;
 }
 
-int strlen_(const char *str, char end_input)
+int strlen_(const char *str, const char end_input)
 {
     assert(str != NULL);
 
@@ -55,7 +55,7 @@ int strlen_(const char *str, char end_input)
     return string_length;
 }
 
-int line_is_empty(char *str, char end_input)
+int line_is_empty(const char *str, const char end_input)
 {
     assert(str != NULL);
 
@@ -189,7 +189,7 @@ int strcmp_end(char *str1, char *str2)
     }
 }
 
-int n_lines(char *buffer, int buffer_len)
+int n_lines(const char *buffer, const int buffer_len)
 {
     assert(buffer != NULL);
 
@@ -206,7 +206,7 @@ int n_lines(char *buffer, int buffer_len)
     return num_lines;
 }
 
-int len_alpha_str(const char *str, int len_str)
+int len_alpha_str(const char *str, const int len_str)
 {
     int len = 0;
 
@@ -263,7 +263,7 @@ int is_comparable(const char symbol)
     return 0;
 }
 
-char tolower_(char symbol)
+char tolower_(const char symbol)
 {
     for (int symbol_index = 0; symbol_index < ARR_RU_LEN; ++symbol_index)
     {
@@ -284,7 +284,7 @@ char tolower_(char symbol)
     return symbol;
 }
 
-int fputs_(char *line, char end_input, FILE *conclusion)
+int fputs_(const char *line, const char end_input, FILE *conclusion)
 {
     if (line == NULL)
         return EOF;

@@ -32,7 +32,6 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="../../../C/fb.cpp" />
 		<Unit filename="lines.cpp" />
 		<Unit filename="lines.h" />
 		<Unit filename="main.cpp" />

@@ -27,6 +27,8 @@ char *copy_file(FILE *input_file, int *file_len)
     *file_len = file_size(input_file);
 
     char *buffer = (char*) calloc(*file_len + 2, sizeof(char));
+    assert(buffer != 0);
+
     buffer[*file_len] = '\n';
 
     fread(buffer, sizeof(char), *file_len, input_file);
@@ -34,14 +36,14 @@ char *copy_file(FILE *input_file, int *file_len)
     return buffer;
 }
 
-void print_array(struct array_element *array_lines, int len_array)
+void print_array(struct array_element *array_lines, const int len_array)
 {
     assert(array_lines != NULL);
 
     fprint_array(array_lines, len_array, stdout);
 }
 
-void fprint_array(struct array_element *array_lines, int len_array, FILE *conclusion)
+void fprint_array(struct array_element *array_lines, const int len_array, FILE *conclusion)
 {
     assert(array_lines != NULL);
     assert(conclusion != NULL);
@@ -50,39 +52,17 @@ void fprint_array(struct array_element *array_lines, int len_array, FILE *conclu
         fputs_(array_lines[symbol_index].str, END_OF_STR, conclusion);
 }
 
-int max_(int number1, int number2)
+int max_(const int number1, const int number2)
 {
-    if (number1 > number2)
-    {
-        return number1;
-    }
-    else if (number2 > number1)
-    {
-        return number2;
-    }
-    else
-    {
-        return number1;
-    }
+    return ((number2 > number1) ? number2 : number1);
 }
 
-int min_(int number1, int number2)
+int min_(const int number1, const int number2)
 {
-    if (number1 < number2)
-    {
-        return number1;
-    }
-    else if (number2 < number1)
-    {
-        return number2;
-    }
-    else
-    {
-        return number1;
-    }
+    return ((number2 < number1) ? number2 : number1);
 }
 
-void quick_sort(struct array_element *array_lines, int low, int high, enum direction start)
+void quick_sort(struct array_element *array_lines, const int low, const int high, enum direction start)
 {
     assert(array_lines != NULL);
 
@@ -118,7 +98,7 @@ void quick_sort(struct array_element *array_lines, int low, int high, enum direc
         {
             if (strcmp_(array_lines[symbol_index1].str, array_lines[symbol_index2].str) == 1)
             {
-                char *temp = array_lines[symbol_index1].str; //îòäåëüíàÿ ôóíêöèÿ swap.
+                char *temp = array_lines[symbol_index1].str;
                 int temp_len = array_lines[symbol_index1].len;
 
                 array_lines[symbol_index1].str = array_lines[symbol_index2].str;
