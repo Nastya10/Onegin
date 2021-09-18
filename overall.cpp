@@ -27,7 +27,7 @@ char *copy_file(FILE *input_file, int *file_len)
     *file_len = file_size(input_file);
 
     char *buffer = (char*) calloc(*file_len + 2, sizeof(char));
-    assert(buffer != 0);
+    assert(buffer != NULL);
 
     buffer[*file_len] = '\n';
 
@@ -62,23 +62,12 @@ int min_(const int number1, const int number2)
     return ((number2 < number1) ? number2 : number1);
 }
 
-void quick_sort(struct array_element *array_lines, const int low, const int high, enum direction start)
+void quick_sort(struct array_element *array_lines, const int low, const int high, int (*strcmp_)(char *, char *))
 {
     assert(array_lines != NULL);
 
     int symbol_index1 = low;
     int symbol_index2 = high;
-
-    int (*strcmp_)(char *, char *) = NULL;
-
-    if (start == BEG_OF_LINE)
-    {
-        strcmp_ = strcmp_begin;
-    }
-    else
-    {
-        strcmp_ = strcmp_end;
-    }
 
     char *pivot = array_lines[(low + (high-low)/2)].str;
 
@@ -98,14 +87,8 @@ void quick_sort(struct array_element *array_lines, const int low, const int high
         {
             if (strcmp_(array_lines[symbol_index1].str, array_lines[symbol_index2].str) == 1)
             {
-                char *temp = array_lines[symbol_index1].str;
-                int temp_len = array_lines[symbol_index1].len;
-
-                array_lines[symbol_index1].str = array_lines[symbol_index2].str;
-                array_lines[symbol_index1].len = array_lines[symbol_index2].len;
-
-                array_lines[symbol_index2].str = temp;
-                array_lines[symbol_index2].len = temp_len;
+                swap_str(&array_lines[symbol_index1].str, &array_lines[symbol_index2].str);
+                swap_int(&array_lines[symbol_index1].len, &array_lines[symbol_index2].len);
             }
 
             symbol_index1++;
@@ -119,11 +102,41 @@ void quick_sort(struct array_element *array_lines, const int low, const int high
 
     if (symbol_index1 < high)
     {
-        quick_sort(array_lines, symbol_index1, high, start);
+        quick_sort(array_lines, symbol_index1, high, strcmp_);
     }
 
     if (symbol_index2 > low)
     {
-        quick_sort(array_lines, low, symbol_index2, start);
+        quick_sort(array_lines, low, symbol_index2, strcmp_);
+    }
+}
+
+void swap_str(char **element1, char **element2)
+{
+    char *temp = *element1;
+    *element1 = *element2;
+    *element2 = temp;
+}
+
+void swap_int(int *element1, int *element2)
+{
+    int temp = *element1;
+    *element1 = *element2;
+    *element2 = temp;
+}
+
+void fprint_Onegin(char *text_input, FILE *conclusion, char *buffer, int len_array = -1, struct array_element *array_lines, int (*strcmp_)(char *, char *))
+{
+    fprintf(conclusion, "\n-------------------------------------------------------------------");
+    fprintf(conclusion, "\n%s\n\n", text_input);
+
+    if(len_array == -1)
+    {
+        fprintf(conclusion, "%s", buffer);
+    }
+    else
+    {
+        quick_sort(array_lines, 0, len_array - 1, strcmp_);
+        fprint_array(array_lines, len_array, conclusion);
     }
 }

@@ -38,11 +38,6 @@ struct array_element {
     int len;
 };
 
-enum direction {
-    BEG_OF_LINE = 1,
-    END_OF_LINE = -1
-};
-
 struct array_element *read_lines(char *buffer, int buffer_len, int* length);
 
 int strlen_(const char *str, const char end_input);

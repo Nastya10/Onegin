@@ -15,7 +15,7 @@ struct array_element *read_lines(char *buffer, const int buffer_len, int* length
     int num_lines = n_lines(buffer, buffer_len);
 
     struct array_element *array_lines = (struct array_element*) calloc(num_lines, sizeof(struct array_element));
-    assert(array_lines != 0);
+    assert(array_lines != NULL);
 
     int array_index = 0;
 
@@ -294,7 +294,7 @@ int fputs_(const char *line, const char end_input, FILE *conclusion)
         int symbol = putc(line[symbol_index], conclusion);
         if(symbol == EOF)
         {
-            printf("Output error");
+            printf("Output error in fputs_");
             return EOF;
         }
     }

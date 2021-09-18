@@ -13,6 +13,12 @@ int max_(const int number1, const int number2);
 
 int min_(const int number1, const int number2);
 
-void quick_sort(struct array_element *array_lines, const int low, const int high, enum direction start);
+void quick_sort(struct array_element *array_lines, const int low, const int high, int (*strcmp_)(char *, char *));
+
+void swap_str(char **element1, char **element2);
+
+void swap_int(int *element1, int *element2);
+
+void fprint_Onegin(char *text_input, FILE *conclusion, char *buffer, int len_array = -1, struct array_element *array_lines = {0}, int (*strcmp_)(char *, char *) = strcmp_begin)
 
 #endif // OVERALL_H_INCLUDED
