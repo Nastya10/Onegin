@@ -125,7 +125,8 @@ void swap_int(int *element1, int *element2)
     *element2 = temp;
 }
 
-void fprint_Onegin(char *text_input, FILE *conclusion, char *buffer, int len_array = -1, struct array_element *array_lines, int (*strcmp_)(char *, char *))
+void fprint_Onegin(char *text_input, FILE *conclusion, int (*strcmp_)(char *, char *), char *buffer,
+                   int len_array, struct array_element *array_lines)
 {
     fprintf(conclusion, "\n-------------------------------------------------------------------");
     fprintf(conclusion, "\n%s\n\n", text_input);

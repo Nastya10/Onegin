@@ -19,6 +19,7 @@ void swap_str(char **element1, char **element2);
 
 void swap_int(int *element1, int *element2);
 
-void fprint_Onegin(char *text_input, FILE *conclusion, char *buffer, int len_array = -1, struct array_element *array_lines = {0}, int (*strcmp_)(char *, char *) = strcmp_begin)
+void fprint_Onegin(char *text_input, FILE *conclusion, int (*strcmp_)(char *, char *), char *buffer = {0},
+                   int len_array = -1, struct array_element *array_lines = {0});
 
 #endif // OVERALL_H_INCLUDED
